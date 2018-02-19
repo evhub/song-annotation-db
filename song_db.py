@@ -49,7 +49,8 @@ def align_ref(ref_beat_array, ref_beat_names, query_beat_array, query_beat_names
     return aligned_ref
 
 def get_ref_query_pairs(artist):
-    """Returns an iterator of aligned (ref_beat_array, query_beat_array) pairs."""
+    """Returns an iterator of aligned (ref_beat_array, query_beat_array) pairs.
+    Since this function is implemented as a generator, no work is done until it is iterated over."""
     for ref_name, query_names in SONG_NAMES.items():
         ref_beat_array, ref_beat_names = get_beats(artist, ref_name)
 
@@ -60,8 +61,15 @@ def get_ref_query_pairs(artist):
             assert aligned_ref.shape == query_beat_array.shape, (aligned_ref.shape, query_beat_array.shape)
             yield aligned_ref, query_beat_array
 
+def data_dict():
+    """Returns a dictionary mapping artists to iterators over their ref_query_pairs.
+    Since each dictionary value is an iterator, no work is done until that value is iterated over."""
+    return {artist: get_ref_query_pairs(artist) for artist in ARTISTS}
+
 # Main
 if __name__ == "__main__":
-    for ref, query in get_ref_query_pairs("taylorswift"):
-        beats, beat_width = query.shape
-        print("{} beats of width {}".format(beats, beat_width))
+    for artist, ref_query_pairs in data_dict().items():
+        print("artist {}".format(artist))
+        for ref, query in ref_query_pairs:
+            beats, beat_width = query.shape
+            print("\t{} beats of width {}".format(beats, beat_width))
