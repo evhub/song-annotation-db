@@ -21,6 +21,7 @@ BEAT_TIME = 1
 
 # Utilities
 def get_beats(artist, song_name):
+    """Returns an array of beats and a list of their corresponding names."""
     base_name = os.path.join(DB_DIR, artist, "{}_{}".format(artist, song_name))
     sample_rate, audio = wavfile.read(base_name+".wav")
     annotations = np.genfromtxt(base_name+".csv", delimiter=",")
@@ -40,6 +41,27 @@ def get_beats(artist, song_name):
 
     return beat_array, beat_names
 
+def align_ref(ref_beat_array, ref_beat_names, query_beat_array, query_beat_names):
+    """Snips the beats from the given reference to match the given query."""
+    aligned_ref = np.zeros(query_beat_array.shape, dtype=ref_beat_array.dtype)
+    for i, (query_beat_name, query_beat) in enumerate(zip(query_beat_names, query_beat_array)):
+        aligned_ref[i] = ref_beat_array[ref_beat_names.index(query_beat_name)]
+    return aligned_ref
+
+def get_ref_query_pairs(artist):
+    """Returns an iterator of aligned (ref_beat_array, query_beat_array) pairs."""
+    for ref_name, query_names in SONG_NAMES.items():
+        ref_beat_array, ref_beat_names = get_beats(artist, ref_name)
+
+        for query_name in query_names:
+            query_beat_array, query_beat_names = get_beats(artist, query_name)
+
+            aligned_ref = align_ref(ref_beat_array, ref_beat_names, query_beat_array, query_beat_names)
+            assert aligned_ref.shape == query_beat_array.shape, (aligned_ref.shape, query_beat_array.shape)
+            yield aligned_ref, query_beat_array
+
 # Main
 if __name__ == "__main__":
-    print(get_beats("taylorswift", "ourquery1"))
+    for ref, query in get_ref_query_pairs("taylorswift"):
+        beats, beat_width = query.shape
+        print("{} beats of width {}".format(beats, beat_width))
