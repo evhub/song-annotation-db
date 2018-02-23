@@ -48,10 +48,14 @@ def align_ref(ref_beat_array, ref_beat_names, query_beat_array, query_beat_names
         aligned_ref[i] = ref_beat_array[ref_beat_names.index(query_beat_name)]
     return aligned_ref
 
-def get_ref_query_pairs(artist):
+def get_ref_query_pairs(artist, ref_name=None):
     """Returns an iterator of aligned (ref_beat_array, query_beat_array) pairs.
     Since this function is implemented as a generator, no work is done until it is iterated over."""
-    for ref_name, query_names in SONG_NAMES.items():
+    if ref_name is None:
+        song_names = SONG_NAMES.items()
+    else:
+        song_names = [(ref_name, SONG_NAMES[ref_name])]
+    for ref_name, query_names in song_names:
         ref_beat_array, ref_beat_names = get_beats(artist, ref_name)
 
         for query_name in query_names:
