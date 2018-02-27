@@ -23,8 +23,8 @@ ARTISTS = (
     "tompetty",
 )
 SONG_NAMES = {
-    "ourref01.wav": ("ourquery1.wav", "ourquery2.wav"),
-    "ourref02.wav": ("ourquery3.wav", "ourquery4.wav"),
+    "ourref01": ("ourquery1", "ourquery2"),
+    "ourref02": ("ourquery3", "ourquery4"),
 }
 BEAT_TIME = 0.5
 
@@ -32,13 +32,33 @@ BEAT_TIME = 0.5
 def annotation_file(song_path):
     """Get the path to the annotation file for the given song."""
     base_path, audio_file = os.path.split(song_path)
-    base_file, _ = os.path.splitext(audio_file)
-    return os.path.join(base_path, base_file.replace("0", "") + ".csv")
+    return os.path.join(base_path, audio_file.replace("0", "") + ".csv")
+
+def audio_file(song_path):
+    """Get the path to the audio file for the given song."""
+    return song_path + ".wav"
+
+def get_song_path(artist, song_name):
+    """Get the path to the given song."""
+    return os.path.join(DB_DIR, artist, "{}_{}".format(artist, song_name))
+
+def audio_paths():
+    """A generator of paths to all the different audio files."""
+    for artist in ARTISTS:
+        for ref_name, query_names in SONG_NAMES.items():
+            yield audio_file(get_song_path(artist, ref_name))
+            for query_name in query_names:
+                yield audio_file(get_song_path(artist, query_name))
+
+def write_audio_paths(fname="audio_paths.txt"):
+    """Write line-separated paths to all the different audio files in the database."""
+    with open(fname, "w") as audio_paths_file:
+        audio_paths_file.writelines(path+"\n" for path in audio_paths())
 
 def get_beats(artist, song_name):
     """Returns an array of beats and a list of their corresponding names."""
-    song_path = os.path.join(DB_DIR, artist, "{}_{}".format(artist, song_name))
-    sample_rate, audio = wavfile.read(song_path)
+    song_path = get_song_path(artist, song_name)
+    sample_rate, audio = wavfile.read(audio_file(song_path))
     annotations = np.genfromtxt(annotation_file(song_path), delimiter=",")
 
     beats = annotations.shape[0]
@@ -87,6 +107,7 @@ def data_dict():
 
 # Main
 if __name__ == "__main__":
+    write_audio_paths()
     for artist, ref_query_pairs in data_dict().items():
         print("artist {}".format(artist))
         for ref, query in ref_query_pairs:
