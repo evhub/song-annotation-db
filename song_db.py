@@ -11,20 +11,35 @@ from scipy.io import wavfile
 # Constants
 DB_DIR = os.path.join(os.path.dirname(__file__), "artists")
 ARTISTS = (
+    "bigkrit",
+    "chromeo",
+    "deathcabforcutie",
+    "foofighters",
+    "kanyewest",
+    "maroon5",
+    "onedirection",
+    "t.i",
     "taylorswift",
+    "tompetty",
 )
 SONG_NAMES = {
-    "ourref1": ("ourquery1", "ourquery2"),
-    "ourref2": ("ourquery3", "ourquery4"),
+    "ourref01.wav": ("ourquery1.wav", "ourquery2.wav"),
+    "ourref02.wav": ("ourquery3.wav", "ourquery4.wav"),
 }
-BEAT_TIME = 1
+BEAT_TIME = 0.5
 
 # Utilities
+def annotation_file(song_path):
+    """Get the path to the annotation file for the given song."""
+    base_path, audio_file = os.path.split(song_path)
+    base_file, _ = os.path.splitext(audio_file)
+    return os.path.join(base_path, base_file.replace("0", "") + ".csv")
+
 def get_beats(artist, song_name):
     """Returns an array of beats and a list of their corresponding names."""
-    base_name = os.path.join(DB_DIR, artist, "{}_{}".format(artist, song_name))
-    sample_rate, audio = wavfile.read(base_name+".wav")
-    annotations = np.genfromtxt(base_name+".csv", delimiter=",")
+    song_path = os.path.join(DB_DIR, artist, "{}_{}".format(artist, song_name))
+    sample_rate, audio = wavfile.read(song_path)
+    annotations = np.genfromtxt(annotation_file(song_path), delimiter=",")
 
     beats = annotations.shape[0]
     beat_width = int(BEAT_TIME*sample_rate)
