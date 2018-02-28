@@ -1,6 +1,10 @@
 .PHONY: run
-run: setup
+run: install
 	python3 ./song_db.py
+
+.PHONY: install
+install: setup
+	pip install -e .
 
 .PHONY: setup
 setup:
