@@ -263,11 +263,12 @@ def summarize_features():
     feat_dist = query_features - ref_features
     mean_dist = np.mean(feat_dist, axis=0)
 
-    ave_std_dev = np.mean(std_dev)
-    ave_ref_query_dist = np.mean(mean_dist)
+    ref_query_std_devs = mean_dist/std_dev
+    ave_ref_query_std_devs = np.mean(ref_query_std_devs)
 
-    print("Average standard deviation:", ave_std_dev)
-    print("Average ref-query distance:", ave_ref_query_dist)
+    print("""Reference and query feature arrays are an average of
+\t{}
+standard deviations apart.""".format(ave_ref_query_std_devs))
 
 if __name__ == "__main__":
     print("Summarizing features...")
