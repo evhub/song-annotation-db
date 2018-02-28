@@ -107,5 +107,7 @@ ENV/
 *.sublime-*
 
 # Database
-artists/
+data/
+db/
 audio_paths.txt
+features.npy
