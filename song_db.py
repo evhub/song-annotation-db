@@ -257,17 +257,43 @@ def read_features():
 def summarize_features():
     """Print a summary of the extracted features."""
     raw_features = get_raw_features()
+    n, _ = raw_features.shape
+
     std_devs = np.std(raw_features, axis=0)
+
+    mean = np.mean(raw_features, axis=0)
+    mean_abs_devs = np.mean(np.abs(raw_features - mean), axis=0)
 
     ref_features, query_features = load_features()
     ref_query_dist = np.mean(np.abs(query_features - ref_features), axis=0)
 
-    ref_query_std_devs = ref_query_dist/std_devs
-    ave_ref_query_std_devs = np.mean(ref_query_std_devs)
+    ref_query_std_devs = np.mean(ref_query_dist/std_devs)
+    ref_query_mean_abs_devs = np.mean(ref_query_dist/mean_abs_devs)
+
+    random_features = np.random.permutation(raw_features)
+
+    rand1_features, rand2_features = random_features[:n//2], random_features[n//2:]
+    rand_dist = np.mean(np.abs(rand1_features - rand2_features), axis=0)
+
+    rand_std_devs = np.mean(rand_dist/std_devs)
+    rand_mean_abs_devs = np.mean(rand_dist/mean_abs_devs)
 
     print("""Reference and query feature arrays are an average of
 \t{}
-standard deviations apart.""".format(ave_ref_query_std_devs))
+standard deviations apart and
+\t{}
+mean absolute deviations apart. For comparison, if we randomly
+partition the data instead, we get that the two partitions are
+an average of
+\t{}
+standard deviations apart and
+\t{}
+mean absolute deviations apart.""".format(
+    ref_query_std_devs,
+    ref_query_mean_abs_devs,
+    rand_std_devs,
+    rand_mean_abs_devs,
+))
 
 if __name__ == "__main__":
     print("Summarizing features...")
