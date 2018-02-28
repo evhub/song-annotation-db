@@ -173,9 +173,11 @@ def index_db():
     """Return an iterator of (is_ref, path) for all the files in the database.
     Since this function is implemented as a generator, no work is done until it is iterated over."""
     for ref_file in os.listdir(REFS_DIR):
-        yield 1, os.path.abspath(ref_file)
+        ref_path = os.path.join(REFS_DIR, ref_file)
+        yield 1, os.path.abspath(ref_path)
     for query_file in os.listdir(QUERIES_DIR):
-        yield 0, os.path.abspath(query_file)
+        query_path = os.path.join(QUERIES_DIR, query_file)
+        yield 0, os.path.abspath(query_path)
 
 def write_audio_paths():
     """Write line-separated paths to all the audio files in the database."""
