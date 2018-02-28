@@ -1,7 +1,3 @@
-# Version check
-import sys
-assert sys.version_info >= (3,), "Python 3 is required"
-
 # Imports
 import os
 import os.path

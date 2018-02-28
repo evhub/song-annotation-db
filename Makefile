@@ -1,10 +1,17 @@
 .PHONY: run
 run: setup
-	python ./song_db.py
+	python3 ./song_db.py
 
 .PHONY: setup
 setup:
 	pip install numpy scipy
+
+.PHONY: py2
+py2: setup
+	pip install coconut-develop
+	cp ./song_db.py ./song_db2.coco
+	coconut ./song_db2.coco
+	python ./song_db2.py
 
 .PHONY: clean
 clean:
