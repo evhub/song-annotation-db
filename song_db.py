@@ -257,13 +257,12 @@ def read_features():
 def summarize_features():
     """Print a summary of the extracted features."""
     raw_features = get_raw_features()
-    std_dev = np.std(raw_features, axis=0)
+    std_devs = np.std(raw_features, axis=0)
 
     ref_features, query_features = load_features()
-    feat_dist = query_features - ref_features
-    mean_dist = np.mean(feat_dist, axis=0)
+    ref_query_dist = np.mean(np.abs(query_features - ref_features), axis=0)
 
-    ref_query_std_devs = mean_dist/std_dev
+    ref_query_std_devs = ref_query_dist/std_devs
     ave_ref_query_std_devs = np.mean(ref_query_std_devs)
 
     print("""Reference and query feature arrays are an average of
