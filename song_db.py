@@ -281,6 +281,10 @@ def summarize_features():
     ref_query_stds = scaled_dist(ref_features, query_features, stds)
     ref_query_mads = scaled_dist(ref_features, query_features, mads)
 
+    rand_ref, rand_query = np.random.permutation(ref_features), np.random.permutation(query_features)
+    rand_ref_query_stds = scaled_dist(rand_ref, rand_query, stds)
+    rand_ref_query_mads = scaled_dist(rand_ref, rand_query, mads)
+
     rand1, rand2 = split_arr(np.random.permutation(raw_features))
     rand_stds = scaled_dist(rand1, rand2, stds)
     rand_mads = scaled_dist(rand1, rand2, mads)
@@ -293,7 +297,12 @@ are an average of
 standard deviations apart and
 \t{}
 mean absolute deviations apart. For comparison, if we randomly
-partition the data instead, we get that the two partitions are
+permute the reference and query features they are an average of
+\t{}
+standard deviations apart and
+\t{}
+mean absolute deviations apart. Alternatively, if we randomly
+partition the whole dataset, we get that the two partitions are
 an average of
 \t{}
 standard deviations apart and
@@ -304,6 +313,8 @@ mean absolute deviations apart.
     num_feats,
     ref_query_stds,
     ref_query_mads,
+    rand_ref_query_stds,
+    rand_ref_query_mads,
     rand_stds,
     rand_mads,
 ))

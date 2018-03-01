@@ -40,10 +40,15 @@ are an average of
 standard deviations apart and
         1.24441397190094
 mean absolute deviations apart. For comparison, if we randomly
-partition the data instead, we get that the two partitions are
-an average of
-        1.0886027812957764
+permute the reference and query features they are an average of
+        1.1164846420288086
 standard deviations apart and
-        1.4080867767333984
+        1.4439947605133057
+mean absolute deviations apart. Alternatively, if we randomly
+partition the whole dataset, we get that the two partitions are
+an average of
+        1.090288519859314
+standard deviations apart and
+        1.4102412462234497
 mean absolute deviations apart.
 ```
