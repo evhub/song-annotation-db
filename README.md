@@ -11,7 +11,7 @@ Database of aligned song snippets.
 make install
 ```
 4. then just
-```
+```python
 from song_db import data_by_song
 for (artist, ref_name), ref_query_pairs in data_by_song().items():
 print("song {} of artist {}".format(ref_name, artist))
