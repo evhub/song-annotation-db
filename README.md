@@ -5,12 +5,13 @@ Database of aligned song snippets.
 ## Usage
 
 1. Clone the repository,
-2. put the data in `./data/`,
-3. run
+2. get the data from `/home/evhub/ttemp/song-annotation-db/data/`,
+3. put the data in `./data/`,
+4. run
 ```
 make install
 ```
-4. then just
+5. then just
 ```python
 from song_db import data_by_song
 for (artist, ref_name), ref_query_pairs in data_by_song().items():
