@@ -76,13 +76,23 @@ def db_file(song_pair, query_index, beat_index):
 # Beat extraction
 BEAT_WIDTH = int(BEAT_TIME*SAMPLE_RATE)
 
+def get_audio(song_path):
+    """Gets the audio for the given song path."""
+    sample_rate, audio = wavfile.read(audio_file(song_path))
+    assert sample_rate == SAMPLE_RATE, (sample_rate, SAMPLE_RATE)
+    return audio
+
+def get_annotations(song_path):
+    """Gets the annotations for the given song path."""
+    return np.genfromtxt(annotation_file(song_path), delimiter=",")
+
 def get_beats(artist, song_name):
     """Return an array of beats and a list of their corresponding names."""
     song_path = get_song_path(artist, song_name)
-    sample_rate, audio = wavfile.read(audio_file(song_path))
-    assert sample_rate == SAMPLE_RATE, (sample_rate, SAMPLE_RATE)
 
-    annotations = np.genfromtxt(annotation_file(song_path), delimiter=",")
+    audio = get_audio(song_path)
+
+    annotations = get_annotations(song_path)
     beats = annotations.shape[0]
 
     beat_names = []
