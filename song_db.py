@@ -337,6 +337,12 @@ if __name__ == "__main__":
         print("Features not yet present.")
 
 # Usage as an audio database
+def split_query(query, max_query_len=6*SAMPLE_RATE):
+    """Split the given into chunks."""
+    query_len, = query.shape
+    query_indices = list(range(max_query_len, query_len, max_query_len))
+    return np.split(query, query_indices)
+
 def get_refs_queries_groundTruth(artists):
     """Return (refs, queries, groundTruth) for the given artists."""
     refs = []
@@ -356,8 +362,9 @@ def get_refs_queries_groundTruth(artists):
                 query_path = get_song_path(artist, query_name)
                 query_audio = get_audio(query_path)
 
-                queries.append(query_audio)
-                groundTruth.append(index)
+                for query_snip in split_query(query_audio):
+                    queries.append(query_snip)
+                    groundTruth.append(index)
 
     return refs, queries, groundTruth
 
