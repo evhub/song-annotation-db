@@ -335,3 +335,42 @@ if __name__ == "__main__":
         summarize_features()
     else:
         print("Features not yet present.")
+
+# Usage as an audio database
+def get_refs_queries_groundTruth(artists):
+    """Return (refs, queries, groundTruth) for the given artists."""
+    refs = []
+    queries = []
+    groundTruth = []
+
+    for j, artist in enumerate(artists):
+        for i, ref_name in enumerate(SONG_NAMES):
+            index = 1 + j*len(SONG_NAMES) + i
+
+            ref_path = get_song_path(artist, ref_name)
+            ref_audio = get_audio(ref_path)
+
+            refs.append(ref_audio)
+
+            for query_name in SONG_NAMES[ref_name]:
+                query_path = get_song_path(artist, query_name)
+                query_audio = get_audio(query_path)
+
+                queries.append(query_audio)
+                groundTruth.append(index)
+
+    return refs, queries, groundTruth
+
+
+def get_data_for_artist(artist):
+    """Return (refs, queries, groundTruth) for the given artist."""
+    return get_refs_queries_groundTruth([artist])
+
+def get_all_data():
+    """Return (refs, queries, groundTruth) for all artists."""
+    return get_refs_queries_groundTruth(ARTISTS)
+
+if __name__ == "__main__":
+    print("Testing audio database...")
+    refs, queries, groundTruth = get_all_data()
+    print(len(refs), len(queries), groundTruth)
