@@ -15,6 +15,7 @@ py2: setup
 	pip install coconut-develop
 	cp ./song_db.py ./song_db2.coco
 	coconut ./song_db2.coco
+	pip install -e .
 	python ./song_db2.py
 
 .PHONY: clean
