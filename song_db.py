@@ -1,6 +1,5 @@
 # Imports
 import os
-import os.path
 from collections import OrderedDict
 
 import numpy as np
