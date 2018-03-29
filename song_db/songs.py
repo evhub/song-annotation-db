@@ -35,11 +35,11 @@ def get_refs_queries_groundTruth(artists, verbose=False):
     queries = []
     groundTruth = []
 
-    index = 1
+    index = 0
     for j, artist in enumerate(artists):
         for i, (ref_audio, raw_queries) in enumerate(get_refs_and_queries_for_artist(artist, verbose)):
-            refs.append(ref_audio)
             index += 1
+            refs.append(ref_audio)
 
             for query_audio in raw_queries:
                 for query_snip in split_audio(query_audio):

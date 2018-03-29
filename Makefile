@@ -1,15 +1,3 @@
-.PHONY: run-universal
-run-universal: install-universal
-	python -c "from song_db_universal import run_all; run_all()"
-
-.PHONY: run
-run: setup
-	python3 -c "from song_db import run_all; run_all()"
-
-.PHONY: setup
-setup:
-	pip install numpy scipy
-
 .PHONY: install-universal
 install-universal: setup
 	pip install coconut-develop
@@ -21,6 +9,18 @@ install-universal: setup
 .PHONY: install
 install: setup
 	pip install -e .
+
+.PHONY: run-universal
+run-universal: install-universal
+	python -c "from song_db_universal import run_all; run_all()"
+
+.PHONY: run
+run: setup
+	python3 -c "from song_db import run_all; run_all()"
+
+.PHONY: setup
+setup:
+	pip install numpy scipy
 
 .PHONY: clean
 clean:

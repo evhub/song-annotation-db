@@ -5,37 +5,28 @@ Database of aligned song snippets.
 ## Usage
 
 1. Clone the repository,
-2. get the data from `/home/evhub/ttemp/song-annotation-db/data/`,
-3. put the data in `./data/`,
+2. copy the `data`, `songs`, and `db` folders from `/home/evhub/ttemp/song-annotation-db/`,
 4. run
 ```
-make install
+make install-universal
 ```
-5. then just
-```python
-from song_db import data_by_song
-for (artist, ref_name), ref_query_pairs in data_by_song().items():
-    print("song {} of artist {}".format(ref_name, artist))
-    for ref, query in ref_query_pairs:
-        beats, beat_width = query.shape
-        print("\t{} beats of width {}".format(beats, beat_width))
-```
+5. then see `song_db/__init__.py` for example usage of the various features of the database.
 
 ## Feature Generation
 
 Using <https://github.com/evhub/transfer_learning_music>, you can generate features for this database. To do this, run
 ```
 cd song-annotation-db
-make run
+make run-universal
 cd ../transfer_learning_music
-make run
+make run-universal
 ```
 
 ### Feature Summary
 
 If you run
 ```
-make run
+make run-universal
 ```
 with a generated features file available, you should get (approximately) the following feature summary
 ```
