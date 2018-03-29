@@ -1,6 +1,7 @@
 .PHONY: install-universal
 install-universal: setup
 	pip install coconut-develop
+	rm -rf ./song_db_universal
 	cp -r ./song_db ./song_db_universal
 	rename -E "s/\.py$$/\.coco/" ./song_db_universal/*.py
 	coconut ./song_db_universal --no-tco --jobs sys
