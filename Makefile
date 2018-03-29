@@ -18,7 +18,7 @@ setup:
 py2: setup
 	pip install coconut-develop
 	cp -r ./song_db ./song_db2
-	rename -E "s/\.py\$/\.coco/" ./song_db2/*.py
+	rename -E "s/\.py$$/\.coco/" ./song_db2/*.py
 	coconut ./song_db2 --no-tco
 	pip install -e .
 
