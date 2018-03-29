@@ -1,6 +1,10 @@
 .PHONY: run
-run: install
-	python3 ./song_db.py
+run: setup
+	python3 -c "from song_db import run_all; run_all()"
+
+.PHONY: run-py2
+run-py2: py2
+	python -c "from song_db2 import run_all; run_all()"
 
 .PHONY: install
 install: setup
@@ -13,10 +17,10 @@ setup:
 .PHONY: py2
 py2: setup
 	pip install coconut-develop
-	cp ./song_db.py ./song_db2.coco
-	coconut ./song_db2.coco
+	cp -r ./song_db ./song_db2
+	rename -S .py .coco ./song_db2/*.py
+	coconut ./song_db2
 	pip install -e .
-	python ./song_db2.py
 
 .PHONY: clean
 clean:

@@ -107,10 +107,11 @@ ENV/
 *.sublime-*
 
 # Database
+songs/
 data/
 db/
 audio_paths.txt
 features.npy
 
 # Python 2
-song_db2.*
+song_db2/
