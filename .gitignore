@@ -113,5 +113,5 @@ db/
 audio_paths.txt
 features.npy
 
-# Python 2
-song_db2/
+# Universal version
+song_db_universal/

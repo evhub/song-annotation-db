@@ -1,30 +1,30 @@
-.PHONY: run-py2
-run-py2: py2
-	python -c "from song_db2 import run_all; run_all()"
+.PHONY: run-universal
+run-universal: install-universal
+	python -c "from song_db_universal import run_all; run_all()"
 
 .PHONY: run
 run: setup
 	python3 -c "from song_db import run_all; run_all()"
 
-.PHONY: install
-install: setup
-	pip install -e .
-
 .PHONY: setup
 setup:
 	pip install numpy scipy
 
-.PHONY: py2
-py2: setup
+.PHONY: install-universal
+install-universal: setup
 	pip install coconut-develop
-	cp -r ./song_db ./song_db2
-	rename -E "s/\.py$$/\.coco/" ./song_db2/*.py
-	coconut ./song_db2 --no-tco
+	cp -r ./song_db ./song_db_universal
+	rename -E "s/\.py$$/\.coco/" ./song_db_universal/*.py
+	coconut ./song_db_universal --no-tco --jobs sys
+	pip install -e .
+
+.PHONY: install
+install: setup
 	pip install -e .
 
 .PHONY: clean
 clean:
-	rm -rf ./song_db2 ./dist ./build
+	rm -rf ./song_db_universal ./dist ./build
 	find . -name '*.pyc' -delete
 	find . -name '__pycache__' -delete
 
