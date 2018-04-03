@@ -33,10 +33,13 @@ def get_annotations(song_path):
     """Gets the annotations for the given song path."""
     return np.genfromtxt(annotation_file(song_path), delimiter=",")
 
-def get_beats(artist, song_name, beat_time=None):
+BEAT_WIDTH = int(BEAT_TIME*SAMPLE_RATE)
+
+def get_beats(artist, song_name, beat_width=None):
     """Return an array of beats and a list of their corresponding names."""
-    if beat_time is None:
-        beat_time = BEAT_TIME
+    if beat_width is None:
+        beat_width = BEAT_WIDTH
+    beat_time = beat_width/SAMPLE_RATE
 
     song_path = get_song_path(artist, song_name)
     audio = get_audio(song_path)
@@ -45,7 +48,6 @@ def get_beats(artist, song_name, beat_time=None):
     beats = annotations.shape[0]
 
     beat_names = []
-    beat_width = int(beat_time*SAMPLE_RATE)
     beat_array = np.zeros((beats, beat_width), dtype=audio.dtype)
     for i, (time, beat_name) in enumerate(annotations):
         start = int((time - beat_time/2)*SAMPLE_RATE)
@@ -66,13 +68,13 @@ def align_ref(ref_beat_array, ref_beat_names, query_beat_array, query_beat_names
         aligned_ref[i] = ref_beat_array[ref_beat_names.index(query_beat_name)]
     return aligned_ref
 
-def get_pairs_for_ref(artist, ref_name, beat_time=None):
+def get_pairs_for_ref(artist, ref_name, beat_width=None):
     """Return an iterator of aligned (ref_beat_array, query_beat_array) pairs for the given ref.
     Since this function is implemented as a generator, no work is done until it is iterated over."""
-    ref_beat_array, ref_beat_names = get_beats(artist, ref_name, beat_time)
+    ref_beat_array, ref_beat_names = get_beats(artist, ref_name, beat_width)
 
     for query_name in ANNOTATED_SONG_NAMES[ref_name]:
-        query_beat_array, query_beat_names = get_beats(artist, query_name, beat_time)
+        query_beat_array, query_beat_names = get_beats(artist, query_name, beat_width)
 
         aligned_ref = align_ref(ref_beat_array, ref_beat_names, query_beat_array, query_beat_names)
         assert aligned_ref.shape == query_beat_array.shape, (aligned_ref.shape, query_beat_array.shape)
@@ -80,24 +82,24 @@ def get_pairs_for_ref(artist, ref_name, beat_time=None):
 
 
 # Data endpoints
-def get_ref_query_pairs(artist, beat_time=None):
+def get_ref_query_pairs(artist, beat_width=None):
     """Return an iterator of all aligned (ref_beat_array, query_beat_array) pairs for the given artist.
     Since this function is implemented as a generator, no work is done until it is iterated over."""
     for ref_name in ANNOTATED_SONG_NAMES:
-        yield from get_pairs_for_ref(artist, ref_name, beat_time)
+        yield from get_pairs_for_ref(artist, ref_name, beat_width)
 
-def data_by_song(beat_time=None):
+def data_by_song(beat_width=None):
     """Return a dictionary mapping (artist, ref_name) pairs to iterators over their ref_query_pairs.
     Since each dictionary value is an iterator, no work is done until that value is iterated over."""
     return OrderedDict(
-        ((artist, ref_name), get_pairs_for_ref(artist, ref_name, beat_time))
+        ((artist, ref_name), get_pairs_for_ref(artist, ref_name, beat_width))
         for artist, ref_name in ARTIST_REF_PAIRS
     )
 
-def data_by_artist(beat_time=None):
+def data_by_artist(beat_width=None):
     """Return a dictionary mapping artists to iterators over their ref_query_pairs.
     Since each dictionary value is an iterator, no work is done until that value is iterated over."""
     return OrderedDict(
-        (artist, get_ref_query_pairs(artist, beat_time))
+        (artist, get_ref_query_pairs(artist, beat_width))
         for artist in ARTISTS
     )
