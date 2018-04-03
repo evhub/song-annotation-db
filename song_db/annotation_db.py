@@ -4,6 +4,16 @@ import os
 from .annotations import *
 
 
+# Song ordering
+def pair_to_label(song_pair):
+    """Convert an artist_ref_pair identifying a song into an integer label for that song."""
+    return ARTIST_REF_PAIRS.index(song_pair)
+
+def label_to_pair(song_label):
+    """Convert a label produced by pair_to_label back into the identifying artist_ref_pair."""
+    return ARTIST_REF_PAIRS[song_label]
+
+
 # Path handling
 def db_file(song_pair, query_index, beat_index):
     """Get the name of the database file to save the given song_pair of the given index."""
