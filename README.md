@@ -10,7 +10,9 @@ Database of aligned song snippets.
 ```
 make install-universal
 ```
-5. then see below for example usage of the various features of the database.
+5. then see below for all the documentation of the various features of the database.
+
+_For example usage of all of the below functions of the database, see [`song_db/__init__.py`](https://github.com/evhub/song-annotation-db/blob/master/song_db/__init__.py)._
 
 ## Songs
 
