@@ -28,8 +28,8 @@ def get_refs_and_queries_for_artist(artist, verbose=False):
         )
 
 
-# Audio database
-def get_refs_queries_groundTruth(artists, verbose=False):
+# Internal endpoint
+def get_refs_queries_groundTruth(artists, max_query_len=DEFAULT_SPLIT_LEN, verbose=False):
     """Return (refs, queries, groundTruth) for the given artists."""
     refs = []
     queries = []
@@ -42,16 +42,18 @@ def get_refs_queries_groundTruth(artists, verbose=False):
             refs.append(ref_audio)
 
             for query_audio in raw_queries:
-                for query_snip in split_audio(query_audio):
+                for query_snip in split_audio(query_audio, max_query_len):
                     queries.append(query_snip)
                     groundTruth.append(index)
 
     return refs, queries, groundTruth
 
-def get_data_for_artist(artist):
-    """Return (refs, queries, groundTruth) for the given artist."""
-    return get_refs_queries_groundTruth([artist])
 
-def get_all_data():
+# External endpoints
+def get_data_for_artist(artist, max_query_len=DEFAULT_SPLIT_LEN, verbose=False):
+    """Return (refs, queries, groundTruth) for the given artist."""
+    return get_refs_queries_groundTruth([artist], max_query_len, verbose)
+
+def get_all_data(max_query_len=DEFAULT_SPLIT_LEN, verbose=False):
     """Return (refs, queries, groundTruth) for all artists."""
-    return get_refs_queries_groundTruth(ARTISTS)
+    return get_refs_queries_groundTruth(ARTISTS, max_query_len, verbose)

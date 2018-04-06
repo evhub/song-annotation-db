@@ -10,9 +10,51 @@ Database of aligned song snippets.
 ```
 make install-universal
 ```
-5. then see `song_db/__init__.py` for example usage of the various features of the database.
+5. then see below for example usage of the various features of the database.
 
-## Feature Generation
+## Songs
+
+If you just need access to labeled reference/query data, you probably want to use the songs database. To import the songs database, just write
+```
+from song_db import songs
+```
+which will give you access to the following functions for interfacing with the song database.
+
+**songs.get_data_for_artist**(`artist, max_query_len=songs.DEFAULT_SPLIT_LEN, verbose=False`)
+
+Returns the 3-tuple `(refs, queries, groundTruth)` where `refs` is a list of all the references for the given artist, `queries` is a list of all split queries (defined below) for the given artist, and `groundTruth` is a list of labels for `queries` (such that `queries` and `groundTruth` are guaranteed to have the same length). The `groundTruth` label for a query is simply the index of the reference in `refs` that the query corresponds to. The `max_query_len` parameter specifies the maximum length of a query you are willing to allow, and splits all queries into smaller query chunks of length less than or equal to the given `max_query_len`.
+
+**songs.get_all_data**(`max_query_len=songs.DEFAULT_SPLIT_LEN, verbose=False`)
+
+`get_all_data` is exactly the same as `get_data_for_artist` except it includes all the reference songs in the database, not just those for one artist.
+
+_If you need finer-grained access to the songs database than the above functions provide, see `song_db/songs.py`._
+
+## Annotations
+
+If you just need access to labeled reference/query data, you probably want to use the songs database. To import the songs database, just write
+```
+from song_db import annotations
+```
+which will give you access to the following functions for interfacing with the annotation database.
+
+**annotations.get_ref_query_pairs**(`artist, beat_width=annotations.DEFAULT_BEAT_WIDTH`)
+
+Returns an iterator of `(ref_beat_array, query_beat_array)` pairs for the given artist. One pair is generated for each annotated beat in each annotated query. The `query_beat_array` is simply a segment of the query around that beat of length `beat_width` and the `ref_beat_array` is just the same length segment of the corresponding beat in the reference.
+
+**annotations.data_by_artist**(`beat_width=annotations.DEFAULT_BEAT_WIDTH`)
+
+Returns an ordered dictionary from artist name to the result of `get_ref_query_pairs` for that artist.
+
+**annotations.data_by_song**(`beat_width=annotations.DEFAULT_BEAT_WIDTH`)
+
+Returns an ordered dictionary mapping `(artist_name, reference_name)` tuples to iterators of `(ref_beat_array, query_beat_array)` pairs for the given artist and song.
+
+_If you need finer-grained access to the annotations database than the above functions provide, see `song_db/annotations.py`._
+
+## Features
+
+### Feature Generation
 
 Using <https://github.com/evhub/transfer_learning_music>, you can generate features for this database. To do this, run
 ```

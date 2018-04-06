@@ -21,7 +21,7 @@ def get_audio(song_path):
 
 
 # Processing audio
-def split_audio(audio, max_len=6*SAMPLE_RATE):
+def split_audio(audio, max_len=DEFAULT_SPLIT_LEN):
     """Split the given audio into chunks."""
     audio_len, = audio.shape
     audio_indices = list(range(max_len, audio_len, max_len))

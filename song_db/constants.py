@@ -38,8 +38,12 @@ ARTISTS = (
 SAMPLE_RATE = 22050
 
 
+# Song constants
+DEFAULT_SPLIT_LEN = 6*SAMPLE_RATE
+
+
 # Annotation constants
-BEAT_TIME = 0.5
+DEFAULT_BEAT_WIDTH = SAMPLE_RATE//2
 
 ANNOTATED_SONG_NAMES = OrderedDict(
     ourref01=("ourquery1", "ourquery2"),
