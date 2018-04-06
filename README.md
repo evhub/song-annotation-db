@@ -32,7 +32,7 @@ _If you need finer-grained access to the songs database than the above functions
 
 ## Annotations
 
-If you just need access to labeled reference/query data, you probably want to use the songs database. To import the songs database, just write
+If you just need access to annotation data, you probably want to use the annotations database. To import the annotations database, just write
 ```
 from song_db import annotations
 ```
