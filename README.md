@@ -8,7 +8,7 @@ Database of aligned song snippets.
 2. copy the `data`, `songs`, and `db` folders from `/home/evhub/ttemp/song-annotation-db/`,
 4. run
 ```
-make install-universal
+make
 ```
 5. then see below for all the documentation of the various features of the database.
 
@@ -21,6 +21,8 @@ If you just need access to labeled reference/query data, you probably want to us
 from song_db import songs
 ```
 which will give you access to the following functions for interfacing with the song database.
+
+_If the above gives you a `SyntaxError`, try `from song_db_universal import songs` instead.
 
 **songs.get_data_for_artist**(`artist, max_query_len=songs.DEFAULT_SPLIT_LEN, verbose=False`)
 
@@ -39,6 +41,8 @@ If you want annotated data, you probably want to use the annotations database. T
 from song_db import annotations
 ```
 which will give you access to the following functions for interfacing with the annotation database.
+
+_If the above gives you a `SyntaxError`, try `from song_db_universal import annotations` instead.
 
 **annotations.get_ref_query_pairs**(`artist, beat_width=annotations.DEFAULT_BEAT_WIDTH`)
 
