@@ -22,7 +22,7 @@ from song_db import songs
 ```
 which will give you access to the following functions for interfacing with the song database.
 
-_If the above gives you a `SyntaxError`, try `from song_db_universal import songs` instead.
+_If the above gives you a `SyntaxError`, try `from song_db_universal import songs` instead._
 
 **songs.get_data_for_artist**(`artist, max_query_len=songs.DEFAULT_SPLIT_LEN, verbose=False`)
 
@@ -42,7 +42,7 @@ from song_db import annotations
 ```
 which will give you access to the following functions for interfacing with the annotation database.
 
-_If the above gives you a `SyntaxError`, try `from song_db_universal import annotations` instead.
+_If the above gives you a `SyntaxError`, try `from song_db_universal import annotations` instead._
 
 **annotations.get_ref_query_pairs**(`artist, beat_width=annotations.DEFAULT_BEAT_WIDTH`)
 
