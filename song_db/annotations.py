@@ -8,20 +8,35 @@ from .util import *
 
 
 # Path handling
-def annotation_file(song_path):
-    """Get the path to the annotation file for the given song."""
+def get_base_path_audio_file(artist, song_name):
+    """Get the base song path for the given artist and song."""
+    song_path = os.path.join(DATA_DIR, artist, "{}_{}".format(artist, song_name))
     base_path, audio_file = os.path.split(song_path)
-    return os.path.join(base_path, audio_file.replace("0", "") + ".csv")
+    return base_path, audio_file
+
+def annotation_file(artist, song_name):
+    """Get the path to the annotation file for the given song."""
+    base_path, audio_file = get_base_path_audio_file(artist, song_name)
+    annotation_path = os.path.join(base_path, audio_file + ".csv")
+    for path in (annotation_path, annotation_path.replace("0", "")):
+        if os.path.exists(path):
+            return path
+    raise IOError("could not find annotation for artist %s and song %s" % (artist, song_name))
 
 def get_song_path(artist, song_name):
     """Get the path to the given song."""
-    return os.path.join(DATA_DIR, artist, "{}_{}".format(artist, song_name))
+    base_path, audio_file = get_base_path_audio_file(artist, song_name)
+    audio_path = os.path.join(base_path, audio_file + ".wav")
+    for path in (audio_path, audio_path.replace("0", "")):
+        if os.path.exists(path):
+            return path
+    raise IOError("could not find annotation for artist %s and song %s" % (artist, song_name))
 
 
 # Beat extraction
-def get_annotations(song_path):
+def get_annotations(artist, song_name):
     """Gets the annotations for the given song path."""
-    return np.genfromtxt(annotation_file(song_path), delimiter=",")
+    return np.genfromtxt(annotation_file(artist, song_name), delimiter=",")
 
 def get_beats(artist, song_name, beat_width=DEFAULT_BEAT_WIDTH):
     """Return an array of beats and a list of their corresponding names."""
@@ -32,7 +47,7 @@ def get_beats(artist, song_name, beat_width=DEFAULT_BEAT_WIDTH):
     song_path = get_song_path(artist, song_name)
     audio = get_audio(song_path)
 
-    annotations = get_annotations(song_path)
+    annotations = get_annotations(artist, song_name)
     beats = annotations.shape[0]
 
     beat_names = []
@@ -63,7 +78,7 @@ def get_pairs_for_ref(artist, ref_name, beat_width=DEFAULT_BEAT_WIDTH):
     Since this function is implemented as a generator, no work is done until it is iterated over."""
     ref_beat_array, ref_beat_names = get_beats(artist, ref_name, beat_width)
 
-    for query_name in ANNOTATED_SONG_NAMES[ref_name]:
+    for query_name in ANNOTATED_SONG_NAMES[artist][ref_name]:
         query_beat_array, query_beat_names = get_beats(artist, query_name, beat_width)
 
         aligned_ref = align_ref(ref_beat_array, ref_beat_names, query_beat_array, query_beat_names)
@@ -75,7 +90,7 @@ def get_pairs_for_ref(artist, ref_name, beat_width=DEFAULT_BEAT_WIDTH):
 def get_ref_query_pairs(artist, beat_width=DEFAULT_BEAT_WIDTH):
     """Return an iterator of all aligned (ref_beat_array, query_beat_array) pairs for the given artist.
     Since this function is implemented as a generator, no work is done until it is iterated over."""
-    for ref_name in ANNOTATED_SONG_NAMES:
+    for ref_name in ANNOTATED_SONG_NAMES[artist]:
         yield from get_pairs_for_ref(artist, ref_name, beat_width)
 
 def data_by_artist(beat_width=DEFAULT_BEAT_WIDTH):
