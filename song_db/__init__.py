@@ -5,12 +5,14 @@ from .constants import *
 
 
 # Songs
-from .songs import get_data_for_artist
+from .songs import get_data_for_artist, get_snips_for_artist
 
 def run_songs():
     print("Testing audio database...")
     refs, queries, groundTruth = get_data_for_artist("taylorswift")
     print(len(refs), len(queries), len(groundTruth))
+    refs, queries = get_snips_for_artist("taylorswift")
+    print(refs.shape, queries.shape)
 
 
 # Annotations
