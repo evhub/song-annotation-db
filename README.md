@@ -24,9 +24,9 @@ which will give you access to the following functions for interfacing with the s
 
 _If the above gives you a `SyntaxError`, try `from song_db_universal import songs` instead._
 
-**songs.get_snips_for_artist**(`artists, audio_len=songs.DEFAULT_SPLIT_LEN, verbose=False`)
+**songs.get_snips_for_artist**(`artist, audio_len=songs.DEFAULT_SPLIT_LEN, verbose=False`)
 
-Returns the pair `(refs, queries)` where `refs` is an array of shape `(num_refs, audio_len)` and `queries` is an array of shape `(num_queries, audio_len)`. References and queries are split into `audio_len` chunks such that every row in each array is a clip from some reference/query of length exactly `audio_len` and no clips overlap.
+Returns the pair `(refs, queries)` where `refs` is an array of shape `(num_refs, audio_len)` and `queries` is an array of shape `(num_queries, audio_len)`. References and queries are split into `audio_len` chunks such that every row in each array is a clip from some reference/query of length exactly `audio_len` and no clips overlap. Only songs from the given artist are used.
 
 **songs.get_all_snips**(`audio_len=songs.DEFAULT_SPLIT_LEN, verbose=False`)
 
